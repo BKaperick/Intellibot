@@ -1,4 +1,5 @@
-
+import pickle
+from base_functions import *
 
 def getText(filename):
     with open(filename+'.txt') as file:
@@ -16,15 +17,25 @@ def getSpeakers(text):
 
 Speakers = getSpeakers(getText('TAL'))
 
+def formatString(line):
+    badChars = (',','.','?','-',"'",'"')
+    line = line.lower().replace("  "," ")
+    for char in badChars:
+        line = line.replace(char,"")
+    return line
+
 def getQuestionAnswer(text):
-    for line in text:
-        content = line.rstrip()
-        if not line in getSpeakers(text):
-            if len(line) > 0:
-                if line[-1] == '?':
-                    print(line)
+    QuestionAnswer = {}
+    for line in range(0, len(text)):
+        content = line
+        if not text[line] in getSpeakers(text):
+            if text[line][-1] == '?':
+                QuestionAnswer[clean(text[line])] = clean(text[line+2])
             else:
                 pass#print('<\line>',line.rstrip().rstrip(),'<line>')
+    return QuestionAnswer
 
 text = getText('TAL')
-getQuestionAnswer(text)
+Answer = getQuestionAnswer(text)
+
+pickle.dump(Answer, open("podcast_language.p", "wb") )

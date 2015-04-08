@@ -1,18 +1,23 @@
 import math
+import pickle
+from base_functions import *
 
-PUNCTUATION = ['.',',',';','?','!',':']
 INTERESTING_LETTERS = ['b','g','j','k','l','m','p','q','u','v','w','x','z']
 SIMILARITY_THRESHHOLD = 1.333
 vocabulary = {"do you play any games": "i enjoy basketball",
               "who is sam": "sam is my favorite teacher",
               "hello": "hi how are you",
-              "what is a good movie": "the big lebowski is good"
+              "what is a good movie": "the big lebowski is good",
               "do you have a name": "my name is bryan"}
 
+
+def addPodcastVocabulary(vocabulary):
+    vocab = pickle.load(open("podcast_language.p", "rb"))
+    vocabulary.update(vocab)
+    return vocabulary
+
 def prepareInput(inString):
-    inString = inString.lower()
-    for punc in PUNCTUATION:
-        inString = inString.replace(punc, "")
+    inString = clean(inString)
     words = inString.split(" ");
     return words
 
@@ -106,6 +111,8 @@ def distance(vec1, vec2):
     for i in range(0,len(vec1)):
         distance += (vec1[i]-vec2[i])**2
     return math.sqrt(distance)
+
+vocabulary = addPodcastVocabulary(vocabulary)
 
 prompt = ""
 person_speak = "Hello. What is your favorite game to play?"
